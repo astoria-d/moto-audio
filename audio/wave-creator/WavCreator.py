@@ -118,7 +118,7 @@ def create_wave_header(wav_file, num_channel, sample_rate, bits_per_sample, data
     sub_chunk2_size = int(data_period * sample_rate * num_channel * bits_per_sample / 8)
 
     # total chunk size
-    chunk_size = 32 + sub_chunk2_size
+    chunk_size = 36 + sub_chunk2_size
 
     print("== RIFF chunk ==")
     print("chunk_id: " + hex(chunk_id))
