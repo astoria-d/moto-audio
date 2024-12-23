@@ -3,9 +3,11 @@ import sys
 import os.path
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
 MIN_FREQ = 12
 MAX_FREQ = 5000
+#MAX_FREQ = 100000
 REFRESH_PERIOD = 2 / MIN_FREQ
 
 def fourier_transform(audio_data, num_channel, sample_rate, bits_per_sample):
@@ -79,15 +81,7 @@ def fourier_transform(audio_data, num_channel, sample_rate, bits_per_sample):
 
 #        print("(f, spectrum): {:.4f}, {:.4f}".format(freq_arr[indx], spectrum_arr[0][indx]))
 
-    for indx in range(num_freq):
-        plt.plot(freq_arr, spectrum_arr[0])
-
-    plt.xlabel('freq')
-    plt.ylabel('spectrum (db)')
-    
-    plt.title('audio spectrum')
-    plt.show()
-
+    return freq_arr, spectrum_arr[0]
 
 def parse_wav_file(wav_file):
     data = wav_file.read()
@@ -174,27 +168,33 @@ def parse_wav_file(wav_file):
     num_xform_data = int(sample_rate * REFRESH_PERIOD)
     print("num_xform_data: " + str(num_xform_data))
 
-    fourier_transform(audio_data[0:int(num_xform_data * bits_per_sample * num_channel / 8)],
+    return fourier_transform(audio_data[0:int(num_xform_data * bits_per_sample * num_channel / 8)],
                   num_channel, sample_rate, bits_per_sample)
 
-def print_usage():
-    print(sys.argv[0] + ": <input .wav file>")
-
 def main():
-#    print(sys.argv[0])
 
-    if (len(sys.argv) == 1):
-        print_usage()
-        sys.exit(100)
+    parser = argparse.ArgumentParser(description='apply low pass filter')
+    parser.add_argument('in_file', help='audio file name')
+    parser.add_argument('-l', '--log10', help='xaxis scale=log10', action='store_true', default=False)
+    args = parser.parse_args()
 
-    wav_fname = sys.argv[1]
+    wav_fname = args.in_file
     if (not os.path.exists(wav_fname)):
         print("[" + wav_fname + "] not found.")
         sys.exit(101)
 
     wav_file = open(wav_fname, "rb")
 
-    parse_wav_file(wav_file)
+    freq, spectrum = parse_wav_file(wav_file)
+
+    plt.plot(freq, spectrum)
+    plt.xlabel('freq')
+    if args.log10:
+        plt.xscale('log',base=10)
+    plt.ylabel('spectrum (db)')
+    
+    plt.title(f'audio spectrum [{wav_fname}]')
+    plt.show()
 
     wav_file.close()
 
