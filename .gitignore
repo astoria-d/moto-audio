@@ -5,4 +5,5 @@ ddd
 
 *.wav
 Pipfile
+*-plot
 
