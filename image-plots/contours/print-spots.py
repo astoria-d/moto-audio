@@ -55,15 +55,23 @@ def main():
     ax.xaxis.tick_top()
     plt.title('points')
 
-    print(polys[3])
-    scat = ax.scatter(polys[3][0][0], polys[3][1][0])
+#    print(polys[3])
+#    scat = ax.scatter(polys[3][0][0], polys[3][1][0])
+
+#    print(polys)
+
+    print_points = []
+    for p_arr in polys:
+        xs = p_arr[0]
+        ys = p_arr[1]
+        for i in range(len(xs)):
+            p = [xs[i], ys[i]]
+            print_points.append(p)
 
     def update_points(frame):
-#        print(polys[3][0][frame])
-        scat = ax.scatter(polys[3][0][frame], polys[3][1][frame])
-        return scat
+        return ax.scatter(print_points[frame][0], print_points[frame][1])
 
-    ani=animation.FuncAnimation(fig, update_points, frames=len(polys[3][0]), interval=30)
+    ani=animation.FuncAnimation(fig, update_points, frames=len(print_points), interval=30)
 
     plt.show()
 
