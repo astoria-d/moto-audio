@@ -208,16 +208,18 @@ def add_wave(wave1: WaveData, wave2: WaveData):
 
 #        print("indx:" + str(indx))
 
+        num_samples1 = len(wave1.data.audio_data[ch])
+        num_samples2 = len(wave2.data.audio_data[ch])
         for smp in range(num_samples):
 
             wave1_val = 0
             wave2_val = 0
 
             if ch < wave1.fmt.num_channel:
-                if smp < num_samples:
+                if smp < num_samples1:
                     wave1_val = wave1.data.audio_data[ch][smp]
             if ch < wave2.fmt.num_channel:
-                if smp < num_samples:
+                if smp < num_samples2:
                     wave2_val = wave2.data.audio_data[ch][smp]
 
             added_val = wave1_val + wave2_val
