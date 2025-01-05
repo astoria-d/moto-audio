@@ -1,6 +1,6 @@
 
 import sys
-sys.path.append('../../add-waves')
+sys.path.append('../add-waves')
 
 import os.path
 import argparse
@@ -12,7 +12,7 @@ from WaveCore import FmtSubchunk
 from WaveCore import DataSubchunk
 from WaveCore import WaveData
 
-from ModulationCore import encod_data
+from ModulationCore import encode_data
 
 def main():
     parser = argparse.ArgumentParser(description='create .wav file')
@@ -50,7 +50,7 @@ def main():
     block_align = 4
 
     # data
-    audio_data = encod_data(in_data, num_channel, sample_rate)
+    audio_data = encode_data(in_data, num_channel, sample_rate)
     data_chunk_size = int(len(audio_data[0]) * num_channel * bits_per_sample / 8)
 
 

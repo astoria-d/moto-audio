@@ -1,5 +1,12 @@
 
 import math
+import sys
+sys.path.append('../add-waves')
+
+from WaveCore import FmtSubchunk
+from WaveCore import DataSubchunk
+from WaveCore import WaveData
+
 
 STD_AMP = 1000
 BIT0_FREQ = 1000
@@ -21,7 +28,7 @@ def create_sin_wave(data_period: float, sample_rate: int, amp: int, freq: int) -
     return sin_wave
 
 
-def encod_data(data: [], num_channel: int, sample_rate: int) -> [[]]:
+def encode_data(data: [], num_channel: int, sample_rate: int) -> [[]]:
     bit0_wave = create_sin_wave(SYM_PERIOD, sample_rate, STD_AMP, BIT0_FREQ)
     bit1_wave = create_sin_wave(SYM_PERIOD, sample_rate, STD_AMP, BIT1_FREQ)
     framer_wave = create_sin_wave(SYM_PERIOD, sample_rate, STD_AMP, FRAMER_FREQ)
@@ -48,3 +55,12 @@ def encod_data(data: [], num_channel: int, sample_rate: int) -> [[]]:
 #    print(encoded_data)
 
     return encoded_data
+
+def decode_data(wav_data: WaveData) -> bytearray:
+    print(wav_data)
+
+    decoded_data = bytearray(10)
+#    print(type(decoded_data))
+
+
+    return decoded_data
