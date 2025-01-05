@@ -1,6 +1,6 @@
 
 import sys
-sys.path.append('../add-waves')
+sys.path.append('../edit-waves')
 
 import os.path
 import argparse

@@ -1,7 +1,4 @@
 
-import sys
-sys.path.append('../add-waves')
-
 import os.path
 import argparse
 

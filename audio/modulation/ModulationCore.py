@@ -1,7 +1,7 @@
 
 import math
 import sys
-sys.path.append('../add-waves')
+sys.path.append('../edit-waves')
 
 from WaveCore import FmtSubchunk
 from WaveCore import DataSubchunk
