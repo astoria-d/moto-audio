@@ -32,7 +32,7 @@ class DataSubchunk:
                 ch += 1
             return ret_str
 
-        return f"<FmtSubchunk subchunk_id:{self.subchunk_id} sub_chunk_size:{self.sub_chunk_size} {print_data(self)})>"
+        return f"<DataSubchunk subchunk_id:{self.subchunk_id} sub_chunk_size:{self.sub_chunk_size} {print_data(self)})>"
 
 
 class WaveData:
@@ -358,8 +358,60 @@ def mul_wave(wave1: WaveData, wave2: WaveData, divider: int = 32):
 
     return multiplied_wave
 
+def split_wave(input_wave: WaveData, split_point: float) -> (WaveData, WaveData):
+#    print(input_wave)
 
-def parse_wav_file(wav_file):
+    split_point_index = int(split_point * input_wave.fmt.sample_rate)
+    print("split_point_index:" + str(split_point_index))
+    print("len1:" + str(len(input_wave.data.audio_data[0])))
+    print("len2:" + str(len(input_wave.data.audio_data[0][0:split_point_index])))
+    print("len3:" + str(len(input_wave.data.audio_data[0][split_point_index:])))
+    wave1_data = [[]] * input_wave.fmt.num_channel
+    wave2_data = [[]] * input_wave.fmt.num_channel
+    for ch in range(input_wave.fmt.num_channel):
+        wave1_data[ch] = input_wave.data.audio_data[ch][0:split_point_index]
+        wave2_data[ch] = input_wave.data.audio_data[ch][split_point_index:]
+
+    print("len2-:" + str(len(wave1_data[ch])))
+    print("len3-:" + str(len(wave2_data[ch])))
+
+    fmt = FmtSubchunk()
+    fmt.subchunk_id = input_wave.fmt.subchunk_id
+    fmt.sub_chunk_size = input_wave.fmt.sub_chunk_size
+    fmt.audio_format = input_wave.fmt.audio_format
+    fmt.num_channel = input_wave.fmt.num_channel
+    fmt.sample_rate = input_wave.fmt.sample_rate
+    fmt.byte_rate = input_wave.fmt.byte_rate
+    fmt.block_align = input_wave.fmt.block_align
+    fmt.bits_per_sample = input_wave.fmt.bits_per_sample
+
+    wdata1 = DataSubchunk()
+    wdata1.subchunk_id = input_wave.data.subchunk_id
+    wdata1.sub_chunk_size = len(wave1_data[0]) * input_wave.fmt.bits_per_sample / 8 * input_wave.fmt.num_channel
+    wdata1.audio_data = wave1_data
+
+    wave1 = WaveData()
+    wave1.chunk_id = input_wave.chunk_id
+    wave1.chunk_size = 36 + wdata1.sub_chunk_size
+    wave1.format = input_wave.format
+    wave1.fmt = fmt
+    wave1.data = wdata1
+
+    wdata2 = DataSubchunk()
+    wdata2.subchunk_id = input_wave.data.subchunk_id
+    wdata2.sub_chunk_size = len(wave2_data[0]) * input_wave.fmt.bits_per_sample / 8 * input_wave.fmt.num_channel
+    wdata2.audio_data = wave2_data
+
+    wave2 = WaveData()
+    wave2.chunk_id = input_wave.chunk_id
+    wave2.chunk_size = 36 + wdata2.sub_chunk_size
+    wave2.format = input_wave.format
+    wave2.fmt = fmt
+    wave2.data = wdata2
+
+    return wave1, wave2
+
+def parse_wav_file(wav_file) -> WaveData:
     data = wav_file.read()
 
     print('parse_wav_file')
