@@ -124,7 +124,7 @@ def parse_wav_file(wav_file):
     print("====")
     num_samples = int(sub_chunk2_size / num_channel / bits_per_sample * 8)
     print("num samples: " + str(num_samples))
-    print("data period {:.4f}(s): ".format(num_samples / sample_rate))
+    print("data period {:.3f}(s): ".format(num_samples / sample_rate))
 
     display_plots(audio_data, sub_chunk2_size,
                   num_channel, sample_rate, bits_per_sample)
