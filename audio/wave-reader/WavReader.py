@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def display_plots(audio_data, audio_data_size, num_channel, sample_rate, bits_per_sample):
 
     num_samples = int(audio_data_size / num_channel / bits_per_sample * 8)
-    sample_period = 1000000 / sample_rate
+    sample_period = 1000 / sample_rate
     bytes_per_sample = int(bits_per_sample / 8)
     block_align = bytes_per_sample * num_channel
 
@@ -39,10 +39,10 @@ def display_plots(audio_data, audio_data_size, num_channel, sample_rate, bits_pe
     for ch in range(num_channel):
         plt.plot(t_arr, audio_arr[ch])
 
-    plt.xlabel('time')
+    plt.xlabel('time (ms)')
     plt.ylabel('audio')
     
-    plt.title('LPCM')
+    plt.title('LPCM {}'.format(sys.argv[1]))
     plt.show()
 
 def parse_wav_file(wav_file):

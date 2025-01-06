@@ -168,7 +168,7 @@ def display_plots(wave: WaveData):
     bits_per_sample = wave.fmt.bits_per_sample
 
     num_samples = int(audio_data_size / num_channel / bits_per_sample * 8)
-    sample_period = 1000000 / sample_rate
+    sample_period = 1000 / sample_rate
 
     t_arr = [0] * num_samples
 
@@ -178,7 +178,7 @@ def display_plots(wave: WaveData):
     for ch in range(num_channel):
         plt.plot(t_arr, wave.data.audio_data[ch])
 
-    plt.xlabel('time')
+    plt.xlabel('time (ms)')
     plt.ylabel('audio')
     
     plt.title('LPCM')
