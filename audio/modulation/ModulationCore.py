@@ -21,6 +21,7 @@ FRAMER_FREQ = 4000
 # 10ms per symbol -> 100 sps
 SYM_PERIOD = 0.01
 
+MAX_DISP_FREQ = 10000
 
 def create_sin_wave(data_period: float, sample_rate: int, amp: int, freq: int) -> [[]]:
     num_samples = int(data_period * sample_rate)
@@ -102,6 +103,12 @@ def decode_data(wav_data: WaveData) -> bytearray:
         f_datas.append(abs(sym_data_f))
         freqs.append(np.arange(len(sym_data_f)) / len(sym_data_f) * wav_data.fmt.sample_rate)
 
+    disp_end = 0
+    for i in range(len(freqs[0])):
+        if freqs[0][i] > MAX_DISP_FREQ:
+            break
+        disp_end += 1
+
 
     # Create a figure and axis
     fig, ax = plt.subplots()
@@ -111,16 +118,20 @@ def decode_data(wav_data: WaveData) -> bytearray:
 #    line, = ax.plot(np.fft.fftfreq(f_datas[0]), f_datas[0])
 
     #plt.plot(f_datas[0].real, f_datas[0].real)
-    line, = ax.plot(freqs[0][:100], f_datas[0][:100])
+    line, = ax.plot(freqs[0][:disp_end], f_datas[0][:disp_end])
+    ax.set_ylim(0, 300000)
+
+    time_delta = 30
 
     def update_graph(frame):
-        plt.title('frequent domain amplitude: time({:.4f})'.format(frame / wav_data.fmt.sample_rate))
-        line.set_xdata(freqs[frame][:100])
-        line.set_ydata(abs(f_datas[frame][:100]))
+        t = frame * time_delta
+        plt.title('frequent domain amplitude: time({:.1f} ms)'.format(1000 * t / wav_data.fmt.sample_rate))
+        line.set_xdata(freqs[t][:disp_end])
+        line.set_ydata(abs(f_datas[t][:disp_end]))
         return line
 
 
-    ani=animation.FuncAnimation(fig, update_graph, frames=len(f_datas), interval=10)
+    ani=animation.FuncAnimation(fig, update_graph, frames=int(len(f_datas) / time_delta), interval=10)
 
     plt.show()
 
