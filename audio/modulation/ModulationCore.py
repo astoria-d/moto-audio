@@ -100,7 +100,7 @@ def decode_data(wav_data: WaveData) -> bytearray:
         end = min(start + sym_period_cnt, len(audio_data))
         sym_data = audio_data[start:end]
         sym_data_f = np.fft.fft(sym_data)
-        f_datas.append(abs(sym_data_f))
+        f_datas.append(2/(end-start) * abs(sym_data_f))
         freqs.append(np.arange(len(sym_data_f)) / len(sym_data_f) * wav_data.fmt.sample_rate)
 
     disp_end = 0
@@ -119,7 +119,7 @@ def decode_data(wav_data: WaveData) -> bytearray:
 
     #plt.plot(f_datas[0].real, f_datas[0].real)
     line, = ax.plot(freqs[0][:disp_end], abs(f_datas[0][:disp_end]))
-    ax.set_ylim(0, 300000)
+    ax.set_ylim(0, 1200)
 
     time_delta = 30
 
