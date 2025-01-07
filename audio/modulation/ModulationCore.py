@@ -118,7 +118,7 @@ def decode_data(wav_data: WaveData) -> bytearray:
 #    line, = ax.plot(np.fft.fftfreq(f_datas[0]), f_datas[0])
 
     #plt.plot(f_datas[0].real, f_datas[0].real)
-    line, = ax.plot(freqs[0][:disp_end], f_datas[0][:disp_end])
+    line, = ax.plot(freqs[0][:disp_end], abs(f_datas[0][:disp_end]))
     ax.set_ylim(0, 300000)
 
     time_delta = 30
